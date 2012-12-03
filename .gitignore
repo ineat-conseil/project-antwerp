@@ -15,3 +15,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+
+# Project #
+src/main/webapp/WEB-INF/glassfish-web.xml
