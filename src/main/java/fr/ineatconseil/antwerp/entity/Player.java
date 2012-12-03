@@ -1,22 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package fr.ineatconseil.antwerp;
+package fr.ineatconseil.antwerp.entity;
 
-/**
- *
- * @author nicolasger
- */
 public class Player {
-    private Long id = System.currentTimeMillis();
+
+    private Long id;
     private String firstName;
     private String lastName;
+    
+    public Player(){}
 
+    public Player(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
