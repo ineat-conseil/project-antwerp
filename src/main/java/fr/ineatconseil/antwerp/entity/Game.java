@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 /**
  * Represent a game between 2 players. 
  * All moves are recorded chronologically.
- * the game is about morpion, so moves represent actions on a grid  of 3x3
+ * the game is about tic tac toe, so moves represent actions on a grid  of 3x3
  * @author nicolasger
  */
 public class Game {

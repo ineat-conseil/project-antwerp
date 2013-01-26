@@ -27,12 +27,12 @@ public class GamesResource {
     }   
         
     @POST
-    public Response createGame(@Context UriInfo uriInfo, Player player) {
+    public Response createGame(@Context UriInfo uriInfo, Game game) {
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(GamesResource.class)
                 .path("{id}")
-                .build(DataProvider.createGame(player).getId()))
+                .build(DataProvider.createGame(game).getId()))
               .build();
     }
     

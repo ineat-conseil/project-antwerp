@@ -19,8 +19,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.moxy.json.MoxyJsonBinder;
 
 /**
- * mvn exec:java -Dexec.mainClass="fr.ineatconseil.antwerp.client.RestClient"
- * -Dexec.classpathScope=compile
+ * mvn exec:java -Dexec.mainClass="fr.ineatconseil.antwerp.client.RestClient" -Dexec.classpathScope=compile
  */
 public class RestClient {
 
@@ -65,9 +64,9 @@ public class RestClient {
         return gameResource.request(JSON).get(new GenericType<List<Game>>(){});
     }
     
-    public URI createGame(Player player) {
-        Entity<Player> jsonPlayer = Entity.json(player);
-        Response response = gameResource.request(JSON).post(jsonPlayer);
+    public URI createGame(Game game) {
+        Entity<Game> jsonGame = Entity.json(game);
+        Response response = gameResource.request(JSON).post(jsonGame);
         return response.getLocation();
     }
     
@@ -113,7 +112,9 @@ public class RestClient {
         Player johnDoe = rc.getPlayer(johnDoeURI);
         Player fooBar = rc.getPlayer(fooBarURI);
         
-        URI fooBarGameURI = rc.createGame(fooBar);
+        Game newGame = new Game();
+        newGame.setPlayer1(fooBar);
+        URI fooBarGameURI = rc.createGame(newGame);
         List<Game> games = rc.getGameList();
         log.log(Level.INFO, "=========> {0} games", games.size());
         for(Game game : games) {

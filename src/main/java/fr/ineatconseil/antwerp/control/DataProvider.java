@@ -18,10 +18,9 @@ public class DataProvider {
         return inMemoryGames.values();
     }
     
-    public static Game createGame(Player player) {
-        Game game = new Game();
+    public static Game createGame(Game game) {
         game.setId(System.nanoTime());
-        game.setPlayer1(player);
+        game.setPlayer1(game.getPlayer1());
         inMemoryGames.put(game.getId(), game);
         return game;
     }
