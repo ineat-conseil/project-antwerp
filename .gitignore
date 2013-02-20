@@ -8,6 +8,7 @@
 
 /target
 
+#Netbeans
 nbproject/private/
 build/
 nbbuild/
@@ -15,3 +16,12 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+#Intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Project #
+src/main/webapp/WEB-INF/glassfish-web.xml
