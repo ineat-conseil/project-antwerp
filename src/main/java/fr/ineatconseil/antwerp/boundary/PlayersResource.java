@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package fr.ineatconseil.antwerp;
+package fr.ineatconseil.antwerp.boundary;
 
+import fr.ineatconseil.antwerp.control.DataProvider;
+import fr.ineatconseil.antwerp.entity.Player;
 import java.util.Collection;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,16 +14,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-/**
- *
- * @author nicolasger
- */
 @Path("players")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PlayersResource {
-    
-    
+       
     @GET
     public Collection<Player> getAll() {
         return DataProvider.getAllPlayers();
@@ -44,7 +36,7 @@ public class PlayersResource {
                 uriInfo.getBaseUriBuilder()
                 .path(PlayersResource.class)
                 .path("{id}")
-                .build(DataProvider.createPlayer(player)))
+                .build(DataProvider.createPlayer(player).getId()))
               .build();
     }
 }
