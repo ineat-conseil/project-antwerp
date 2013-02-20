@@ -20,7 +20,6 @@ public class DataProvider {
     
     public static Game createGame(Game game) {
         game.setId(System.nanoTime());
-        game.setPlayer1(game.getPlayer1());
         inMemoryGames.put(game.getId(), game);
         return game;
     }
