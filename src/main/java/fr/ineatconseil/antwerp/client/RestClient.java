@@ -24,12 +24,10 @@ import org.glassfish.jersey.moxy.json.MoxyJsonBinder;
 public class RestClient {
 
     private static final String API_URL = "http://localhost:8080/project-antwerp/api";
-    private static final String PLAYERS_URL = API_URL + "/players";
     private static final String GAMES_URL = API_URL + "/games";
     private static final MediaType JSON = MediaType.APPLICATION_JSON_TYPE;
     
     private final Client rsClient;
-    private final WebTarget  playerResource;
     private final WebTarget gameResource;
     private static final Logger log = Logger.getLogger(RestClient.class.getName());
     
@@ -38,22 +36,13 @@ public class RestClient {
                 new ClientConfig().binders(
                 new MoxyJsonBinder()));
         
-        playerResource = rsClient.target(PLAYERS_URL);
         gameResource = rsClient.target(GAMES_URL);
     }
 
-    public List<Player> getPlayerList() {
-       return playerResource.request(JSON).get(new GenericType<List<Player>>(){});
-    }
-    
-    public URI addPlayer(Player player) {
+    public URI addPlayer(URI gameURI, Player player) {
         Entity<Player> jsonPlayer = Entity.json(player);
-        Response response = playerResource.request(JSON).post(jsonPlayer);
+        Response response = rsClient.target(gameURI.toString()+"/players").request(JSON).post(jsonPlayer);
         return response.getLocation();
-    }
-    
-    public Player getPlayer(URI uri) {
-        return rsClient.target(uri).request(JSON).get(Player.class);
     }
     
     public Game getGame(URI uri) {
@@ -70,21 +59,11 @@ public class RestClient {
         return response.getLocation();
     }
     
-    public void joinGame(URI game, Player player2) {
-        Entity<Player> jsonPlayer = Entity.json(player2);
-        rsClient.target(game).request(JSON).post(jsonPlayer);
-    }
-    
-    public String displayPlayer(Player p) {
-        return "=========> " + p.getFirstName() + " " + p.getLastName() + " (id:" + p.getId() + ") is connected.";
-    }
-    
     public String displayGame(Game g) {
         return "=========> game n°" + g.getId()
                 + " - status: " + g.getStatus()
                 + " - player1 id:" + (g.getPlayer1()==null?"?":g.getPlayer1().getId())
                 + " - player2 id:" + (g.getPlayer2()==null?"?":g.getPlayer2().getId());
-                    
     }
     
     public void move(URI game, Player p, int x, int y) {
@@ -97,23 +76,12 @@ public class RestClient {
     public static void main(String... args) {
         RestClient rc = new RestClient();
     
-        log.log(Level.INFO, "=========> {0} players", rc.getPlayerList().size());
         log.log(Level.INFO, "=========> {0} games", rc.getGameList().size());
         
-        URI johnDoeURI = rc.addPlayer(new Player("John", "Doe"));
-        URI fooBarURI = rc.addPlayer(new Player("Foo", "Bar"));
-        
-        List<Player> players = rc.getPlayerList();
-        log.log(Level.INFO, "=========> {0} players", players.size());
-        for(Player p : players) {
-            log.log(Level.INFO,rc.displayPlayer(p));
-        }
-        
-        Player johnDoe = rc.getPlayer(johnDoeURI);
-        Player fooBar = rc.getPlayer(fooBarURI);
-        
+        Player johnDoe = new Player("John");
+        Player fooBar = new Player("Foo");
+
         Game newGame = new Game();
-        newGame.setPlayer1(fooBar);
         URI fooBarGameURI = rc.createGame(newGame);
         List<Game> games = rc.getGameList();
         log.log(Level.INFO, "=========> {0} games", games.size());
@@ -121,10 +89,15 @@ public class RestClient {
             log.log(Level.INFO,rc.displayGame(game));
         }
         
-        rc.joinGame(fooBarGameURI, johnDoe);
+        rc.addPlayer(fooBarGameURI, fooBar);
+        rc.addPlayer(fooBarGameURI, johnDoe);
         
         Game game = rc.getGame(fooBarGameURI);
         log.log(Level.INFO, rc.displayGame(game));
+
+        //get players with their ids
+        johnDoe = game.getPlayer1();
+        fooBar = game.getPlayer2();
         
         for(int i = 0; GameStatus.PLAYING.equals(game.getStatus()); i++) {
             rc.move(fooBarGameURI, fooBar, 0, i);

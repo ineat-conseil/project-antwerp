@@ -1,6 +1,7 @@
 package fr.ineatconseil.antwerp.entity;
 
 import java.util.LinkedHashSet;
+import java.util.logging.Logger;
 
 /**
  * Represent a game between 2 players. 
@@ -97,6 +98,7 @@ public class Game {
     }
     
     private void updateGameStatus(long playerId) {
+        Logger.getLogger(this.getClass().getName()).info("##"+moves.size());
         if(moves.size()==9) { 
             status = GameStatus.OVER;
         } else {

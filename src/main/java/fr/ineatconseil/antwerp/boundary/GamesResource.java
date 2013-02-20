@@ -21,11 +21,12 @@ import javax.ws.rs.core.UriInfo;
 @Produces(MediaType.APPLICATION_JSON)
 public class GamesResource {
     
-    @GET
-    public Collection<Game> getAll() {
-        return DataProvider.getAllGames();
-    }   
-        
+    /**
+     * create a new game (without any players)
+     * @param uriInfo
+     * @param game
+     * @return 
+     */
     @POST
     public Response createGame(@Context UriInfo uriInfo, Game game) {
         return Response.created(
@@ -36,25 +37,53 @@ public class GamesResource {
               .build();
     }
     
-    @GET
-    @Path("{id:[0-9]+}")
-    public Game getGame(@PathParam("id") Long id) {
-        return DataProvider.getGame(id);
-    }
-    
+    /**
+     * add a player into a game
+     * @param uriInfo
+     * @param gameId 
+     * @param game
+     * @return 
+     */
     @POST
-    @Path("{id:[0-9]+}")
-    public Response joinGame(@Context UriInfo uriInfo,@PathParam("id") Long gameId, Player player) {
+    @Path("{id:[0-9]+}/players")
+    public Response addPlayer(@Context UriInfo uriInfo, @PathParam("id") Long gameId, Player player) {
         Game game = DataProvider.getGame(gameId);
         DataProvider.addPlayer(game, player);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(GamesResource.class)
-                .path("{id}")
+                    .path("{id}")
                 .build(game.getId()))
               .build();
+    }
+    
+    /**
+     * get all games
+     * @return 
+     */
+    @GET
+    public Collection<Game> getAll() {
+        return DataProvider.getAllGames();
     } 
     
+    /**
+     * get a game by id
+     * @param id
+     * @return 
+     */
+    @GET
+    @Path("{id:[0-9]+}")
+    public Game getGame(@PathParam("id") Long id) {
+        return DataProvider.getGame(id);
+    }
+ 
+    /**
+     * play a move on a game
+     * @param uriInfo
+     * @param gameId
+     * @param move
+     * @return 
+     */
     @POST
     @Path("{id:[0-9]+}/moves")
     public Response move(@Context UriInfo uriInfo,@PathParam("id") Long gameId, Move move) {

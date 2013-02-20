@@ -9,11 +9,7 @@ import java.util.HashMap;
 public class DataProvider {
     
     private static HashMap<Long, Game> inMemoryGames = new HashMap<>();
-    private static HashMap<Long, Player> inMemoryPlayers = new HashMap<>();
-    
-    /*
-     * GAME
-     */
+
     public static Collection<Game> getAllGames() {
         return inMemoryGames.values();
     }
@@ -31,37 +27,25 @@ public class DataProvider {
     public static Game getGame(Long id) {
         return inMemoryGames.get(id);
     }
-    
-    /*
-     * MOVE
-     */
+
     public static Game move(Long gameId, Move move) {
         Game game = getGame(gameId);
         move.setId(System.nanoTime());
         game.addMove(move);
+        System.err.print(game.getStatus());
         return game;
-    }
-    
-    /*
-     * PLAYER
-     */
-    public static Player createPlayer(Player p) {
-        p.setId(System.nanoTime());
-        inMemoryPlayers.put(p.getId(), p);
-        return p;
-    }
-    
-    public static Collection<Player> getAllPlayers() {
-        return inMemoryPlayers.values();
-    }
-    
-    public static Player getPlayer(Long id) {
-        return inMemoryPlayers.get(id);
     }
     
     public static Game addPlayer(Game game, Player player) {
         Game _game = inMemoryGames.get(game.getId());
-        _game.setPlayer2(player);
+        if (player.getId()==null) {
+            player.setId(System.nanoTime());
+        }
+        if(_game.getPlayer1()==null) {
+            _game.setPlayer1(player);
+        } else if(_game.getPlayer2()==null) {
+            _game.setPlayer2(player);
+        }
         return _game;
     }
 }

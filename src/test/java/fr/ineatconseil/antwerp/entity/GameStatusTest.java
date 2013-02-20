@@ -5,9 +5,7 @@
 package fr.ineatconseil.antwerp.entity;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +33,7 @@ public class GameStatusTest {
     
     @Test
     public void statusOnePlayers() {
-        Player p = new Player("Foo", "Bar");
+        Player p = new Player("Foo");
         p.setId(System.nanoTime());
         game.setPlayer1(p);
         assertEquals(game.getStatus(), GameStatus.WAITING_FOR_PLAYERS);
@@ -43,9 +41,9 @@ public class GameStatusTest {
     
     @Test
     public void statusTwoPlayers() {
-        Player p1 = new Player("Foo", "Bar");
+        Player p1 = new Player("Foo");
         p1.setId(System.nanoTime());
-        Player p2 = new Player("John", "Doe");
+        Player p2 = new Player("John");
         p2.setId(System.nanoTime());
         game.setPlayer1(p1);
         game.setPlayer2(p2);
