@@ -50,7 +50,7 @@ public class GamesResource {
         Player p = DataProvider.addPlayer(DataProvider.getGame(gameId), player);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
-                .path(MovesResource.class)
+                .path(PlayersResource.class)
                 .path("{id}")
                 .build(player.getId()))
               .build();
