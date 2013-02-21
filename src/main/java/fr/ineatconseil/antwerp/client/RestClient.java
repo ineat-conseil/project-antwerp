@@ -8,6 +8,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientFactory;
 import javax.ws.rs.client.Entity;
@@ -66,10 +67,11 @@ public class RestClient {
                 + " - player2 id:" + (g.getPlayer2()==null?"?":g.getPlayer2().getId());
     }
     
-    public void move(URI game, Player p, int x, int y) {
+    public URI move(URI game, Player p, int x, int y) {
         Move m = new Move(x, y, p.getId());
         Entity<Move> jsonMove = Entity.json(m);
-        rsClient.target(game+"/moves").request(JSON).post(jsonMove);
+        Response response = rsClient.target(game+"/moves").request(JSON).post(jsonMove);
+        return response.getLocation();
     }
     
     
@@ -89,8 +91,16 @@ public class RestClient {
             log.log(Level.INFO,rc.displayGame(game));
         }
         
-        rc.addPlayer(fooBarGameURI, fooBar);
+        URI playerUri = rc.addPlayer(fooBarGameURI, fooBar);
         rc.addPlayer(fooBarGameURI, johnDoe);
+        
+        //test not supported Exception
+        try {
+            rc.rsClient.target(playerUri).request(JSON).get(Player.class);
+            throw new RuntimeException("something's wrong");
+        } catch (NotSupportedException nse) {
+            log.log(Level.INFO, "get a player is not supported");
+        }
         
         Game game = rc.getGame(fooBarGameURI);
         log.log(Level.INFO, rc.displayGame(game));
@@ -99,12 +109,20 @@ public class RestClient {
         johnDoe = game.getPlayer1();
         fooBar = game.getPlayer2();
         
+        URI moveUri = null;
         for(int i = 0; GameStatus.PLAYING.equals(game.getStatus()); i++) {
-            rc.move(fooBarGameURI, fooBar, 0, i);
+            moveUri = rc.move(fooBarGameURI, fooBar, 0, i);
             log.log(Level.INFO, "=========> Foo Bar moves to {0}/{1}", new Integer[]{0, i});
             rc.move(fooBarGameURI, johnDoe, 1, i);
             log.log(Level.INFO, "=========> John Doe moves to {0}/{1}", new Integer[]{1, i});
             game = rc.getGame(fooBarGameURI);
+        }
+        //test not supported Exception
+        try {
+            rc.rsClient.target(moveUri).request(JSON).get(Move.class);
+            throw new RuntimeException("something's wrong");
+        } catch (NotSupportedException nse) {
+            log.log(Level.INFO, "get a move is not supported");
         }
         
         log.log(Level.INFO, rc.displayGame(game));

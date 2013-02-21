@@ -7,7 +7,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 @ApplicationPath("api")
 public class JaxrsApplication extends ResourceConfig{
     public JaxrsApplication() {
-        super(GamesResource.class);
+        super(  PlayersResource.class, 
+                MovesResource.class,
+                GamesResource.class);
         addBinders(new MoxyJsonBinder());
     }
 }

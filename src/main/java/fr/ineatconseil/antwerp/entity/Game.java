@@ -63,7 +63,7 @@ public class Game {
         return moves;
     }
 
-    public void addMove(Move move) {
+    public Move addMove(Move move) {
         // is the game over ?
         if(GameStatus.OVER.equals(status)) {
             throw new java.lang.UnsupportedOperationException("The game is over.");
@@ -95,6 +95,7 @@ public class Game {
         moves.add(move);
         
         updateGameStatus(move.getPlayerId());
+        return move;
     }
     
     private void updateGameStatus(long playerId) {

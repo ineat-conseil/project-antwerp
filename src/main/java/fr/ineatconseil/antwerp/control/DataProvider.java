@@ -28,24 +28,25 @@ public class DataProvider {
         return inMemoryGames.get(id);
     }
 
-    public static Game move(Long gameId, Move move) {
+    public static Move move(Long gameId, Move move) {
         Game game = getGame(gameId);
         move.setId(System.nanoTime());
-        game.addMove(move);
-        System.err.print(game.getStatus());
-        return game;
+        return game.addMove(move);
     }
     
-    public static Game addPlayer(Game game, Player player) {
+    public static Player addPlayer(Game game, Player player) {
         Game _game = inMemoryGames.get(game.getId());
+        Player p=null;
         if (player.getId()==null) {
             player.setId(System.nanoTime());
         }
         if(_game.getPlayer1()==null) {
             _game.setPlayer1(player);
+            p=_game.getPlayer1();
         } else if(_game.getPlayer2()==null) {
             _game.setPlayer2(player);
+            p=_game.getPlayer2();
         }
-        return _game;
+        return p;
     }
 }

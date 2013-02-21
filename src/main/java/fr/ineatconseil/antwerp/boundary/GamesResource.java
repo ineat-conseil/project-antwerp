@@ -47,13 +47,12 @@ public class GamesResource {
     @POST
     @Path("{id:[0-9]+}/players")
     public Response addPlayer(@Context UriInfo uriInfo, @PathParam("id") Long gameId, Player player) {
-        Game game = DataProvider.getGame(gameId);
-        DataProvider.addPlayer(game, player);
+        Player p = DataProvider.addPlayer(DataProvider.getGame(gameId), player);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
-                .path(GamesResource.class)
-                    .path("{id}")
-                .build(game.getId()))
+                .path(MovesResource.class)
+                .path("{id}")
+                .build(player.getId()))
               .build();
     }
     
@@ -87,12 +86,12 @@ public class GamesResource {
     @POST
     @Path("{id:[0-9]+}/moves")
     public Response move(@Context UriInfo uriInfo,@PathParam("id") Long gameId, Move move) {
-        Game game = DataProvider.move(gameId, move);
+        Move _move = DataProvider.move(gameId, move);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
-                .path(GamesResource.class)
+                .path(MovesResource.class)
                 .path("{id}")
-                .build(game.getId()))
+                .build(_move.getId()))
               .build();
     } 
 }
