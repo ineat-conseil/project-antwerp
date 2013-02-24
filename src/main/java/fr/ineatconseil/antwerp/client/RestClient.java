@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.NotSupportedException;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientFactory;
 import javax.ws.rs.client.Entity;
@@ -16,6 +17,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import junit.framework.Assert;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.moxy.json.MoxyJsonBinder;
 
@@ -98,8 +101,9 @@ public class RestClient {
         try {
             rc.rsClient.target(playerUri).request(JSON).get(Player.class);
             throw new RuntimeException("something's wrong");
-        } catch (NotSupportedException nse) {
-            log.log(Level.INFO, "get a player is not supported");
+        } catch (ServerErrorException e) {
+            Assert.assertEquals(501, e.getResponse().getStatus());
+            log.log(Level.INFO, "get a player is not implemented");
         }
         
         Game game = rc.getGame(fooBarGameURI);
@@ -121,8 +125,9 @@ public class RestClient {
         try {
             rc.rsClient.target(moveUri).request(JSON).get(Move.class);
             throw new RuntimeException("something's wrong");
-        } catch (NotSupportedException nse) {
-            log.log(Level.INFO, "get a move is not supported");
+        } catch (ServerErrorException e) {
+            Assert.assertEquals(501, e.getResponse().getStatus());
+            log.log(Level.INFO, "get a move is not implemented");
         }
         
         log.log(Level.INFO, rc.displayGame(game));

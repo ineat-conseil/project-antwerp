@@ -41,13 +41,16 @@ public class GamesResource {
      * add a player into a game
      * @param uriInfo
      * @param gameId 
-     * @param game
-     * @return 
+     * @return
      */
     @POST
     @Path("{id:[0-9]+}/players")
     public Response addPlayer(@Context UriInfo uriInfo, @PathParam("id") Long gameId, Player player) {
-        Player p = DataProvider.addPlayer(DataProvider.getGame(gameId), player);
+        Game game = DataProvider.getGame(gameId);
+        if(game.getPlayer1()!=null && game.getPlayer2()!=null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Player p = DataProvider.addPlayer(game, player);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(PlayersResource.class)

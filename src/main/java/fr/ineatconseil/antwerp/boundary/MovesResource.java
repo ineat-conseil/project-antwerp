@@ -22,6 +22,6 @@ public class MovesResource {
     @GET
     @Path("{id:[0-9]+}")
     public Response getMove(@PathParam("id") Long id) {
-        throw new NotSupportedException();
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }

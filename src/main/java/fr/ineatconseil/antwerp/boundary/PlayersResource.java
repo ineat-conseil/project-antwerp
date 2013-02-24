@@ -21,6 +21,6 @@ public class PlayersResource {
     @GET
     @Path("{id:[0-9]+}")
     public Response getPlayer(@PathParam("id") Long id) {
-        throw new NotSupportedException();
+       return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }
