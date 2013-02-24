@@ -3,17 +3,19 @@ package fr.ineatconseil.antwerp.control;
 import fr.ineatconseil.antwerp.entity.Game;
 import fr.ineatconseil.antwerp.entity.Move;
 import fr.ineatconseil.antwerp.entity.Player;
+import org.glassfish.jersey.media.sse.EventChannel;
+import org.glassfish.jersey.media.sse.OutboundEvent;
+import org.glassfish.jersey.media.sse.SseBroadcaster;
+
+import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class DataProvider {
     
     private static HashMap<Long, Game> inMemoryGames = new HashMap<>();
-    private static HashMap<Long, Player> inMemoryPlayers = new HashMap<>();
-    
-    /*
-     * GAME
-     */
+    private static SseBroadcaster sseBroadcaster = new SseBroadcaster();
+
     public static Collection<Game> getAllGames() {
         return inMemoryGames.values();
     }
@@ -21,9 +23,10 @@ public class DataProvider {
     public static Game createGame(Game game) {
         game.setId(System.nanoTime());
         inMemoryGames.put(game.getId(), game);
+
         return game;
     }
-    
+
     public static void removeGame(Long id) {
         inMemoryGames.remove(id);
     }
@@ -31,37 +34,47 @@ public class DataProvider {
     public static Game getGame(Long id) {
         return inMemoryGames.get(id);
     }
-    
-    /*
-     * MOVE
-     */
-    public static Game move(Long gameId, Move move) {
+
+    public static Move move(Long gameId, Move move) {
         Game game = getGame(gameId);
         move.setId(System.nanoTime());
-        game.addMove(move);
-        return game;
+        sseBroadcaster.broadcast((new OutboundEvent.Builder())
+                .name("change")
+                .data(Game.class, game)
+                .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                .build());
+        return game.addMove(move);
     }
     
-    /*
-     * PLAYER
-     */
-    public static Player createPlayer(Player p) {
-        p.setId(System.nanoTime());
-        inMemoryPlayers.put(p.getId(), p);
+    public static Player addPlayer(Game game, Player player) {
+        Game _game = inMemoryGames.get(game.getId());
+        Player p=null;
+        if (player.getId()==null) {
+            player.setId(System.nanoTime());
+        }
+        if(_game.getPlayer1()==null) {
+            _game.setPlayer1(player);
+            p =_game.getPlayer1();
+            sseBroadcaster.broadcast((new OutboundEvent.Builder())
+                    .name("new")
+                    .data(Game.class, _game)
+                    .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                    .build());
+        }
+        else if(_game.getPlayer2()==null) {
+            _game.setPlayer2(player);
+            p=_game.getPlayer2();
+            sseBroadcaster.broadcast((new OutboundEvent.Builder())
+                    .name("change")
+                    .data(Game.class, _game)
+                    .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                    .build());
+        }
+
         return p;
     }
-    
-    public static Collection<Player> getAllPlayers() {
-        return inMemoryPlayers.values();
-    }
-    
-    public static Player getPlayer(Long id) {
-        return inMemoryPlayers.get(id);
-    }
-    
-    public static Game addPlayer(Game game, Player player) {
-        Game _game = inMemoryGames.get(game.getId());
-        _game.setPlayer2(player);
-        return _game;
+
+    public static void addEventChannel(EventChannel ec) {
+        sseBroadcaster.add(ec);
     }
 }

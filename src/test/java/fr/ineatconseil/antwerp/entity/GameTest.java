@@ -15,9 +15,9 @@ public class GameTest {
     @Before
     public void setUp() {
         game=new Game();
-        p1 = new Player("Foo", "Bar");
+        p1 = new Player("Foo");
         p1.setId(System.nanoTime());
-        p2 = new Player("John", "Doe");
+        p2 = new Player("John");
         p2.setId(System.nanoTime());
         game.setPlayer1(p1);
         game.setPlayer2(p2);
