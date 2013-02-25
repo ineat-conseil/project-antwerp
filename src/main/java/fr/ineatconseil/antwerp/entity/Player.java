@@ -3,14 +3,12 @@ package fr.ineatconseil.antwerp.entity;
 public class Player {
 
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String nickname;
     
     public Player(){}
 
-    public Player(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Player(String nickname) {
+        this.nickname = nickname;
     }
     
     public Long getId() {
@@ -21,21 +19,11 @@ public class Player {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    
-    
 }

@@ -5,11 +5,8 @@
 package fr.ineatconseil.antwerp.entity;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -25,11 +22,11 @@ public class GameExceptionTest {
     @Before
     public void setUp() {
         game=new Game();
-        p1 = new Player("Foo", "Bar");
+        p1 = new Player("Foo");
         p1.setId(System.nanoTime());
-        p2 = new Player("John", "Doe");
+        p2 = new Player("John");
         p2.setId(System.nanoTime());
-        p3 = new Player("Ineat", "Conseil");
+        p3 = new Player("Ineat");
         p3.setId(System.nanoTime());
         game.setPlayer1(p1);
         game.setPlayer2(p2);

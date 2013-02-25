@@ -4,6 +4,8 @@ import fr.ineatconseil.antwerp.control.DataProvider;
 import fr.ineatconseil.antwerp.entity.Game;
 import fr.ineatconseil.antwerp.entity.Move;
 import fr.ineatconseil.antwerp.entity.Player;
+import org.glassfish.jersey.media.sse.EventChannel;
+
 import java.util.Collection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,11 +23,12 @@ import javax.ws.rs.core.UriInfo;
 @Produces(MediaType.APPLICATION_JSON)
 public class GamesResource {
     
-    @GET
-    public Collection<Game> getAll() {
-        return DataProvider.getAllGames();
-    }   
-        
+    /**
+     * create a new game (without any players)
+     * @param uriInfo
+     * @param game
+     * @return 
+     */
     @POST
     public Response createGame(@Context UriInfo uriInfo, Game game) {
         return Response.created(
@@ -36,34 +39,73 @@ public class GamesResource {
               .build();
     }
     
+    /**
+     * add a player into a game
+     * @param uriInfo
+     * @param gameId 
+     * @return
+     */
+    @POST
+    @Path("{id:[0-9]+}/players")
+    public Response addPlayer(@Context UriInfo uriInfo, @PathParam("id") Long gameId, Player player) {
+        Game game = DataProvider.getGame(gameId);
+        if(game.getPlayer1()!=null && game.getPlayer2()!=null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Player p = DataProvider.addPlayer(game, player);
+        return Response.created(
+                uriInfo.getBaseUriBuilder()
+                .path(PlayersResource.class)
+                .path("{id}")
+                .build(player.getId()))
+              .build();
+    }
+    
+    /**
+     * get all games
+     * @return 
+     */
+    @GET
+    public Collection<Game> getAll() {
+        return DataProvider.getAllGames();
+    } 
+    
+    /**
+     * get a game by id
+     * @param id
+     * @return 
+     */
     @GET
     @Path("{id:[0-9]+}")
     public Game getGame(@PathParam("id") Long id) {
         return DataProvider.getGame(id);
     }
-    
-    @POST
-    @Path("{id:[0-9]+}")
-    public Response joinGame(@Context UriInfo uriInfo,@PathParam("id") Long gameId, Player player) {
-        Game game = DataProvider.getGame(gameId);
-        DataProvider.addPlayer(game, player);
-        return Response.created(
-                uriInfo.getBaseUriBuilder()
-                .path(GamesResource.class)
-                .path("{id}")
-                .build(game.getId()))
-              .build();
-    } 
-    
+ 
+    /**
+     * play a move on a game
+     * @param uriInfo
+     * @param gameId
+     * @param move
+     * @return 
+     */
     @POST
     @Path("{id:[0-9]+}/moves")
     public Response move(@Context UriInfo uriInfo,@PathParam("id") Long gameId, Move move) {
-        Game game = DataProvider.move(gameId, move);
+        Move _move = DataProvider.move(gameId, move);
         return Response.created(
                 uriInfo.getBaseUriBuilder()
-                .path(GamesResource.class)
+                .path(MovesResource.class)
                 .path("{id}")
-                .build(game.getId()))
+                .build(_move.getId()))
               .build();
-    } 
+    }
+
+    @GET
+    @Path("events")
+    @Produces(EventChannel.SERVER_SENT_EVENTS)
+    public EventChannel getEvents() {
+        EventChannel ec = new EventChannel();
+        DataProvider.addEventChannel(ec);
+        return ec;
+    }
 }

@@ -1,6 +1,7 @@
 package fr.ineatconseil.antwerp.entity;
 
 import java.util.LinkedHashSet;
+import java.util.logging.Logger;
 
 /**
  * Represent a game between 2 players. 
@@ -62,7 +63,7 @@ public class Game {
         return moves;
     }
 
-    public void addMove(Move move) {
+    public Move addMove(Move move) {
         // is the game over ?
         if(GameStatus.OVER.equals(status)) {
             throw new java.lang.UnsupportedOperationException("The game is over.");
@@ -94,9 +95,11 @@ public class Game {
         moves.add(move);
         
         updateGameStatus(move.getPlayerId());
+        return move;
     }
     
     private void updateGameStatus(long playerId) {
+        Logger.getLogger(this.getClass().getName()).info("##"+moves.size());
         if(moves.size()==9) { 
             status = GameStatus.OVER;
         } else {

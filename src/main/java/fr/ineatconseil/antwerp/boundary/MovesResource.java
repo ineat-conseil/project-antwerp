@@ -9,18 +9,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("players")
+@Path("moves")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class PlayersResource {
+public class MovesResource {
+
     /**
-     * get a player by id
+     * get a move by id
      * @param id
      * @return 
      */
     @GET
     @Path("{id:[0-9]+}")
-    public Response getPlayer(@PathParam("id") Long id) {
-       return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response getMove(@PathParam("id") Long id) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }
