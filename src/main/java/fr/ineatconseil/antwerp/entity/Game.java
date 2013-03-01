@@ -62,6 +62,9 @@ public class Game {
     public LinkedHashSet<Move> getMoves() {
         return moves;
     }
+    public void setMoves(LinkedHashSet<Move> moves){
+        this.moves = moves;
+    }
 
     public Move addMove(Move move) {
         // is the game over ?
@@ -93,14 +96,14 @@ public class Game {
         
         //ok, play!
         moves.add(move);
-        
+
         updateGameStatus(move.getPlayerId());
         return move;
     }
     
     private void updateGameStatus(long playerId) {
         Logger.getLogger(this.getClass().getName()).info("##"+moves.size());
-        if(moves.size()==9) { 
+        if(moves.size()==9) {
             status = GameStatus.OVER;
         } else {
             int[] xCount = new int[3];

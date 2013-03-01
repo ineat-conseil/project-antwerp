@@ -4,7 +4,8 @@ import fr.ineatconseil.antwerp.control.DataProvider;
 import fr.ineatconseil.antwerp.entity.Game;
 import fr.ineatconseil.antwerp.entity.Move;
 import fr.ineatconseil.antwerp.entity.Player;
-import org.glassfish.jersey.media.sse.EventChannel;
+import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.jersey.media.sse.SseFeature;
 
 import java.util.Collection;
 import javax.ws.rs.Consumes;
@@ -102,10 +103,10 @@ public class GamesResource {
 
     @GET
     @Path("events")
-    @Produces(EventChannel.SERVER_SENT_EVENTS)
-    public EventChannel getEvents() {
-        EventChannel ec = new EventChannel();
-        DataProvider.addEventChannel(ec);
+    @Produces(SseFeature.SERVER_SENT_EVENTS)
+    public EventOutput getEvents() {
+        EventOutput ec = new EventOutput();
+        DataProvider.addEventOutput(ec);
         return ec;
     }
 }

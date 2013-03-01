@@ -1,9 +1,10 @@
 package fr.ineatconseil.antwerp.control;
 
 import fr.ineatconseil.antwerp.entity.Game;
+import fr.ineatconseil.antwerp.entity.GameStatus;
 import fr.ineatconseil.antwerp.entity.Move;
 import fr.ineatconseil.antwerp.entity.Player;
-import org.glassfish.jersey.media.sse.EventChannel;
+import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
 
@@ -22,6 +23,7 @@ public class DataProvider {
     
     public static Game createGame(Game game) {
         game.setId(System.nanoTime());
+        game.setStatus(GameStatus.WAITING_FOR_PLAYERS);
         inMemoryGames.put(game.getId(), game);
 
         return game;
@@ -38,12 +40,13 @@ public class DataProvider {
     public static Move move(Long gameId, Move move) {
         Game game = getGame(gameId);
         move.setId(System.nanoTime());
+        Move m = game.addMove(move);
         sseBroadcaster.broadcast((new OutboundEvent.Builder())
                 .name("change")
                 .data(Game.class, game)
                 .mediaType(MediaType.APPLICATION_JSON_TYPE)
                 .build());
-        return game.addMove(move);
+        return m;
     }
     
     public static Player addPlayer(Game game, Player player) {
@@ -74,7 +77,7 @@ public class DataProvider {
         return p;
     }
 
-    public static void addEventChannel(EventChannel ec) {
+    public static void addEventOutput(EventOutput ec) {
         sseBroadcaster.add(ec);
     }
 }
