@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 
 import junit.framework.Assert;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 /**
  * mvn exec:java -Dexec.mainClass="fr.ineatconseil.antwerp.client.RestClient" -Dexec.classpathScope=compile
@@ -39,7 +39,7 @@ public class RestClient {
         rsClient = ClientFactory.newClient(
                 new ClientConfig()
                         .register(
-                                MoxyJsonFeature.class
+                                JacksonFeature.class
                                 ));
         gameResource = rsClient.target(GAMES_URL);
     }
