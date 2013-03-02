@@ -2,7 +2,7 @@ package fr.ineatconseil.antwerp.entity;
 
 public class Player {
 
-    private Long id;
+    private Integer id;
     private String nickname;
     
     public Player(){}
@@ -11,11 +11,11 @@ public class Player {
         this.nickname = nickname;
     }
     
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    
-    public void setId(Long id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
 

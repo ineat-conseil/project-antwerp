@@ -1,5 +1,6 @@
 package fr.ineatconseil.antwerp.entity;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
@@ -14,9 +15,9 @@ public class Game {
     private Long id;
     private Player player1;
     private Player player2;
-    private LinkedHashSet<Move> moves = new LinkedHashSet<>();
+    private LinkedHashSet<Move> moves = new LinkedHashSet<>(9);
     private GameStatus status = GameStatus.WAITING_FOR_PLAYERS;
-    private Long winnerId;
+    private Integer winnerId;
 
     public GameStatus getStatus() {
         return status;
@@ -26,11 +27,11 @@ public class Game {
         this.status = status;
     }
     
-    public Long getWinnerId() {
+    public Integer getWinnerId() {
         return winnerId;
     }
     
-    public void setWinnerId(Long winnerId) {
+    public void setWinnerId(Integer winnerId) {
         this.winnerId = winnerId;
     }
     
@@ -59,51 +60,51 @@ public class Game {
         status = GameStatus.PLAYING;
     }
 
-    public LinkedHashSet<Move> getMoves() {
-        return moves;
+    public Move[] getMoves() {
+        return moves.toArray(new Move[moves.size()]);
     }
-    public void setMoves(LinkedHashSet<Move> moves){
-        this.moves = moves;
+    public void setMoves(Move[] moves){
+        this.moves.addAll(Arrays.asList(moves));
     }
 
     public Move addMove(Move move) {
         // is the game over ?
-        if(GameStatus.OVER.equals(status)) {
+        if(GameStatus.OVER.equals(status) || moves.size() == 9) {
             throw new java.lang.UnsupportedOperationException("The game is over.");
         }
         
         //Does the move is played by one of the players ?
-        if(!move.getPlayerId().equals(player1.getId()) && !move.getPlayerId().equals(player2.getId())) {
-            throw new java.lang.UnsupportedOperationException("Sorry but ... who are you ?");
+        if(move.getPlayerId()!=player1.getId() && move.getPlayerId() != player2.getId()) {
+            throw new java.lang.UnsupportedOperationException("Sorry but ... who are you " + move.getPlayerId() +" ?");
         }
-        
+
         //Does the move is played by the right player ?
-        Move lastMove = 
+        Move lastMove =
                 moves.size()==0
-                ? null
-                : moves.toArray(new Move[moves.size()])[moves.size()-1];
-        
+                        ? null
+                        : moves.toArray(new Move[moves.size()])[moves.size()-1];
+
         if(lastMove != null && lastMove.getPlayerId().equals(move.getPlayerId())) {
             throw new java.lang.UnsupportedOperationException("It's not your turn, buddy!");
         }
-        
+
         //Does the move have already been played ?
         for(Move m : moves) {
             if(m.getX()==move.getX() && m.getY()==move.getY()) {
                 throw new java.lang.UnsupportedOperationException("Not again!");
             }
         }
-        
+
         //ok, play!
+        move.setId(moves.size());
         moves.add(move);
 
         updateGameStatus(move.getPlayerId());
         return move;
     }
     
-    private void updateGameStatus(long playerId) {
-        Logger.getLogger(this.getClass().getName()).info("##"+moves.size());
-        if(moves.size()==9) {
+    private void updateGameStatus(int playerId) {
+        if(moves.size() == 9) {
             status = GameStatus.OVER;
         } else {
             int[] xCount = new int[3];
@@ -112,7 +113,7 @@ public class Game {
             int diagBackSlashCount = 0;
             
             for(Move m : moves) {
-                if(m.getPlayerId() == playerId) {
+                if(m!=null && m.getPlayerId() == playerId) {
                     xCount[m.getX()] = xCount[m.getX()]+1;
                     yCount[m.getY()] = yCount[m.getY()]+1;
                     if(m.getX()==m.getY()) {

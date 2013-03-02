@@ -39,7 +39,6 @@ public class DataProvider {
 
     public static Move move(Long gameId, Move move) {
         Game game = getGame(gameId);
-        move.setId(System.nanoTime());
         Move m = game.addMove(move);
         sseBroadcaster.broadcast((new OutboundEvent.Builder())
                 .name("change")
@@ -52,10 +51,8 @@ public class DataProvider {
     public static Player addPlayer(Game game, Player player) {
         Game _game = inMemoryGames.get(game.getId());
         Player p=null;
-        if (player.getId()==null) {
-            player.setId(System.nanoTime());
-        }
         if(_game.getPlayer1()==null) {
+            player.setId(1);
             _game.setPlayer1(player);
             p =_game.getPlayer1();
             sseBroadcaster.broadcast((new OutboundEvent.Builder())
@@ -65,6 +62,7 @@ public class DataProvider {
                     .build());
         }
         else if(_game.getPlayer2()==null) {
+            player.setId(2);
             _game.setPlayer2(player);
             p=_game.getPlayer2();
             sseBroadcaster.broadcast((new OutboundEvent.Builder())

@@ -23,11 +23,11 @@ public class GameExceptionTest {
     public void setUp() {
         game=new Game();
         p1 = new Player("Foo");
-        p1.setId(System.nanoTime());
-        p2 = new Player("John");
-        p2.setId(System.nanoTime());
+        p1.setId(1);
+        p2 = new Player("Bar");
+        p2.setId(2);
         p3 = new Player("Ineat");
-        p3.setId(System.nanoTime());
+        p3.setId(3);
         game.setPlayer1(p1);
         game.setPlayer2(p2);
     }

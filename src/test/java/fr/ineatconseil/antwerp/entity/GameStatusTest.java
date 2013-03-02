@@ -34,7 +34,7 @@ public class GameStatusTest {
     @Test
     public void statusOnePlayers() {
         Player p = new Player("Foo");
-        p.setId(System.nanoTime());
+        p.setId(1);
         game.setPlayer1(p);
         assertEquals(game.getStatus(), GameStatus.WAITING_FOR_PLAYERS);
     }
@@ -42,9 +42,9 @@ public class GameStatusTest {
     @Test
     public void statusTwoPlayers() {
         Player p1 = new Player("Foo");
-        p1.setId(System.nanoTime());
+        p1.setId(1);
         Player p2 = new Player("John");
-        p2.setId(System.nanoTime());
+        p2.setId(2);
         game.setPlayer1(p1);
         game.setPlayer2(p2);
         assertEquals(game.getStatus(), GameStatus.PLAYING);

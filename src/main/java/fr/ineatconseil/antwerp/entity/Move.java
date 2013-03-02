@@ -1,24 +1,25 @@
 package fr.ineatconseil.antwerp.entity;
 
+
 public class Move {
 
-    private Long id;
+    private Integer id;
     private int x;
     private int y;
-    private Long playerId;
+    private Integer playerId;
 
     public Move() {}
-    public Move(int x, int y, Long playerId) {
+    public Move(int x, int y, Integer playerId) {
         this.x = x;
         this.y = y;
         this.playerId = playerId;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    
-    public void setId(Long id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -38,11 +39,11 @@ public class Move {
         this.y = y;
     }
 
-    public Long getPlayerId() {
+    public Integer getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(Long playerId) {
+    public void setPlayerId(Integer playerId) {
         this.playerId = playerId;
     }
  }
