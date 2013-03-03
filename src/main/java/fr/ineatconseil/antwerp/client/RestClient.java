@@ -72,7 +72,7 @@ public class RestClient {
     }
     
     public URI move(URI game, Player p, int x, int y) {
-        Move m = new Move(x, y, p.getId());
+        Move m = new Move(x, y, p.getSelf());
         Entity<Move> jsonMove = Entity.json(m);
         Response response = rsClient.target(game+"/moves").request(JSON).post(jsonMove);
         return response.getLocation();

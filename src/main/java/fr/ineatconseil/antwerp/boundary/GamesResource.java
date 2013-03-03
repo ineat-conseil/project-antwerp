@@ -14,10 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 
 @Path("games")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -32,11 +29,14 @@ public class GamesResource {
      */
     @POST
     public Response createGame(@Context UriInfo uriInfo, Game game) {
+        game = DataProvider.createGame(game);
+        game.setSelf(uriInfo.getPath()+"/"+game.getId());
+
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(GamesResource.class)
                 .path("{id}")
-                .build(DataProvider.createGame(game).getId()))
+                .build(game.getId()))
               .build();
     }
     
@@ -54,6 +54,7 @@ public class GamesResource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Player p = DataProvider.addPlayer(game, player);
+        p.setSelf(uriInfo.getPath().concat("/").concat(p.getId().toString()));
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(PlayersResource.class)

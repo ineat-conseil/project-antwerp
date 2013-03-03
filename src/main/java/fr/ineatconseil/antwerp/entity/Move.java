@@ -4,15 +4,24 @@ package fr.ineatconseil.antwerp.entity;
 public class Move {
 
     private Integer id;
+    private String self;
     private int x;
     private int y;
-    private Integer playerId;
+    private String playerURI;
 
     public Move() {}
-    public Move(int x, int y, Integer playerId) {
+    public Move(int x, int y, String playerURI) {
         this.x = x;
         this.y = y;
-        this.playerId = playerId;
+        this.playerURI = playerURI;
+    }
+
+    public String getSelf() {
+        return self;
+    }
+
+    public void setSelf(String self) {
+        this.self = self;
     }
 
     public Integer getId() {
@@ -39,11 +48,11 @@ public class Move {
         this.y = y;
     }
 
-    public Integer getPlayerId() {
-        return playerId;
+    public String getPlayerURI() {
+        return playerURI;
     }
 
-    public void setPlayerId(Integer playerId) {
-        this.playerId = playerId;
+    public void setPlayerURI(String playerURI) {
+        this.playerURI = playerURI;
     }
  }

@@ -17,8 +17,10 @@ public class GameTest {
         game=new Game();
         p1 = new Player("Foo");
         p1.setId(1);
+        p1.setSelf("1");
         p2 = new Player("Bar");
         p2.setId(2);
+        p2.setSelf("2");
         game.setPlayer1(p1);
         game.setPlayer2(p2);
     }
@@ -38,18 +40,18 @@ public class GameTest {
     public void line1() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 0, p1.getId()));
+        game.addMove(new Move(0, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p1.getId()));
+        game.addMove(new Move(0, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p2.getId()));
+        game.addMove(new Move(1, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 2, p1.getId()));
+        game.addMove(new Move(0, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -62,18 +64,18 @@ public class GameTest {
     public void line2() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(1, 0, p1.getId()));
+        game.addMove(new Move(1, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 0, p2.getId()));
+        game.addMove(new Move(0, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p1.getId()));
+        game.addMove(new Move(1, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p2.getId()));
+        game.addMove(new Move(0, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 2, p1.getId()));
+        game.addMove(new Move(1, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -86,18 +88,18 @@ public class GameTest {
     public void line3() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(2, 0, p1.getId()));
+        game.addMove(new Move(2, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 0, p2.getId()));
+        game.addMove(new Move(0, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 1, p1.getId()));
+        game.addMove(new Move(2, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p2.getId()));
+        game.addMove(new Move(0, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 2, p1.getId()));
+        game.addMove(new Move(2, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -110,18 +112,18 @@ public class GameTest {
     public void column1() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 0, p1.getId()));
+        game.addMove(new Move(0, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p2.getId()));
+        game.addMove(new Move(0, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p1.getId()));
+        game.addMove(new Move(1, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p2.getId()));
+        game.addMove(new Move(1, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 0, p1.getId()));
+        game.addMove(new Move(2, 0, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -134,18 +136,18 @@ public class GameTest {
     public void column2() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 1, p1.getId()));
+        game.addMove(new Move(0, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 0, p2.getId()));
+        game.addMove(new Move(0, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p1.getId()));
+        game.addMove(new Move(1, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 1, p1.getId()));
+        game.addMove(new Move(2, 1, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -158,18 +160,18 @@ public class GameTest {
     public void column3() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 2, p1.getId()));
+        game.addMove(new Move(0, 2, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 0, p2.getId()));
+        game.addMove(new Move(0, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 2, p1.getId()));
+        game.addMove(new Move(1, 2, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 2, p1.getId()));
+        game.addMove(new Move(2, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -182,18 +184,18 @@ public class GameTest {
     public void diagonal1() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 0, p1.getId()));
+        game.addMove(new Move(0, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p1.getId()));
+        game.addMove(new Move(1, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p2.getId()));
+        game.addMove(new Move(0, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 2, p1.getId()));
+        game.addMove(new Move(2, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     /**
@@ -206,18 +208,18 @@ public class GameTest {
     public void diagonal2() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 2, p1.getId()));
+        game.addMove(new Move(0, 2, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 0, p2.getId()));
+        game.addMove(new Move(0, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 1, p1.getId()));
+        game.addMove(new Move(1, 1, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 0, p1.getId()));
+        game.addMove(new Move(2, 0, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
-        assertEquals(game.getWinnerId(), p1.getId());
+        assertEquals(game.getWinnerId(), p1.getSelf());
     }
     
     
@@ -232,25 +234,25 @@ public class GameTest {
     public void noWinner() {
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(0, 0, p1.getId()));
+        game.addMove(new Move(0, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 1, p2.getId()));
+        game.addMove(new Move(0, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(0, 2, p1.getId()));
-        assertEquals(game.getStatus(), GameStatus.PLAYING);
-        
-        game.addMove(new Move(1, 1, p2.getId()));
-        assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 0, p1.getId()));
-        assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(1, 2, p2.getId()));
+        game.addMove(new Move(0, 2, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
         
-        game.addMove(new Move(2, 1, p1.getId()));
+        game.addMove(new Move(1, 1, p2.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 0, p2.getId()));
+        game.addMove(new Move(1, 0, p1.getSelf()));
         assertEquals(game.getStatus(), GameStatus.PLAYING);
-        game.addMove(new Move(2, 2, p1.getId()));
+        game.addMove(new Move(1, 2, p2.getSelf()));
+        assertEquals(game.getStatus(), GameStatus.PLAYING);
+        
+        game.addMove(new Move(2, 1, p1.getSelf()));
+        assertEquals(game.getStatus(), GameStatus.PLAYING);
+        game.addMove(new Move(2, 0, p2.getSelf()));
+        assertEquals(game.getStatus(), GameStatus.PLAYING);
+        game.addMove(new Move(2, 2, p1.getSelf()));
         
         assertEquals(game.getStatus(), GameStatus.OVER);
         assertNull(game.getWinnerId());

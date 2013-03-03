@@ -40,6 +40,7 @@ public class DataProvider {
     public static Move move(Long gameId, Move move) {
         Game game = getGame(gameId);
         Move m = game.addMove(move);
+        m.setSelf(game.getSelf().concat("/moves/").concat(m.getId().toString()));
         sseBroadcaster.broadcast((new OutboundEvent.Builder())
                 .name("change")
                 .data(Game.class, game)
