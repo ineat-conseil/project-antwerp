@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 
 import junit.framework.Assert;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.moxy.json.MoxyJsonBinder;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 /**
  * mvn exec:java -Dexec.mainClass="fr.ineatconseil.antwerp.client.RestClient" -Dexec.classpathScope=compile
@@ -37,9 +37,10 @@ public class RestClient {
     
     public RestClient() {
         rsClient = ClientFactory.newClient(
-                new ClientConfig().binders(
-                new MoxyJsonBinder()));
-        
+                new ClientConfig()
+                        .register(
+                                JacksonFeature.class
+                                ));
         gameResource = rsClient.target(GAMES_URL);
     }
 
@@ -66,12 +67,12 @@ public class RestClient {
     public String displayGame(Game g) {
         return "=========> game n°" + g.getId()
                 + " - status: " + g.getStatus()
-                + " - player1 id:" + (g.getPlayer1()==null?"?":g.getPlayer1().getId())
-                + " - player2 id:" + (g.getPlayer2()==null?"?":g.getPlayer2().getId());
+                + " - player1 id:" + (g.getPlayer1()==null?"?":g.getPlayer1().getNickname())
+                + " - player2 id:" + (g.getPlayer2()==null?"?":g.getPlayer2().getNickname());
     }
     
     public URI move(URI game, Player p, int x, int y) {
-        Move m = new Move(x, y, p.getId());
+        Move m = new Move(x, y, p.getSelf());
         Entity<Move> jsonMove = Entity.json(m);
         Response response = rsClient.target(game+"/moves").request(JSON).post(jsonMove);
         return response.getLocation();
@@ -83,8 +84,8 @@ public class RestClient {
     
         log.log(Level.INFO, "=========> {0} games", rc.getGameList().size());
         
-        Player johnDoe = new Player("John");
-        Player fooBar = new Player("Foo");
+        Player foo = new Player("Foo");
+        Player bar = new Player("Bar");
 
         Game newGame = new Game();
         URI fooBarGameURI = rc.createGame(newGame);
@@ -94,12 +95,12 @@ public class RestClient {
             log.log(Level.INFO,rc.displayGame(game));
         }
         
-        URI playerUri = rc.addPlayer(fooBarGameURI, fooBar);
-        rc.addPlayer(fooBarGameURI, johnDoe);
+        URI fooUri = rc.addPlayer(fooBarGameURI, foo);
+        rc.addPlayer(fooBarGameURI, bar);
         
         //test not supported Exception
         try {
-            rc.rsClient.target(playerUri).request(JSON).get(Player.class);
+            rc.rsClient.target(fooUri).request(JSON).get(Player.class);
             throw new RuntimeException("something's wrong");
         } catch (ServerErrorException e) {
             Assert.assertEquals(501, e.getResponse().getStatus());
@@ -110,15 +111,15 @@ public class RestClient {
         log.log(Level.INFO, rc.displayGame(game));
 
         //get players with their ids
-        johnDoe = game.getPlayer1();
-        fooBar = game.getPlayer2();
+        foo = game.getPlayer1();
+        bar = game.getPlayer2();
         
         URI moveUri = null;
         for(int i = 0; GameStatus.PLAYING.equals(game.getStatus()); i++) {
-            moveUri = rc.move(fooBarGameURI, fooBar, 0, i);
-            log.log(Level.INFO, "=========> Foo Bar moves to {0}/{1}", new Integer[]{0, i});
-            rc.move(fooBarGameURI, johnDoe, 1, i);
-            log.log(Level.INFO, "=========> John Doe moves to {0}/{1}", new Integer[]{1, i});
+            moveUri = rc.move(fooBarGameURI, foo, 0, i);
+            log.log(Level.INFO, "=========> Foo moves to {0}/{1}", new Integer[]{0, i});
+            rc.move(fooBarGameURI, bar, 1, i);
+            log.log(Level.INFO, "=========> Bar moves to {0}/{1}", new Integer[]{1, i});
             game = rc.getGame(fooBarGameURI);
         }
         //test not supported Exception

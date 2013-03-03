@@ -4,7 +4,8 @@ import fr.ineatconseil.antwerp.control.DataProvider;
 import fr.ineatconseil.antwerp.entity.Game;
 import fr.ineatconseil.antwerp.entity.Move;
 import fr.ineatconseil.antwerp.entity.Player;
-import org.glassfish.jersey.media.sse.EventChannel;
+import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.jersey.media.sse.SseFeature;
 
 import java.util.Collection;
 import javax.ws.rs.Consumes;
@@ -13,10 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 
 @Path("games")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,11 +29,14 @@ public class GamesResource {
      */
     @POST
     public Response createGame(@Context UriInfo uriInfo, Game game) {
+        game = DataProvider.createGame(game);
+        game.setSelf(uriInfo.getPath()+"/"+game.getId());
+
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(GamesResource.class)
                 .path("{id}")
-                .build(DataProvider.createGame(game).getId()))
+                .build(game.getId()))
               .build();
     }
     
@@ -53,6 +54,7 @@ public class GamesResource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Player p = DataProvider.addPlayer(game, player);
+        p.setSelf(uriInfo.getPath().concat("/").concat(p.getId().toString()));
         return Response.created(
                 uriInfo.getBaseUriBuilder()
                 .path(PlayersResource.class)
@@ -102,10 +104,10 @@ public class GamesResource {
 
     @GET
     @Path("events")
-    @Produces(EventChannel.SERVER_SENT_EVENTS)
-    public EventChannel getEvents() {
-        EventChannel ec = new EventChannel();
-        DataProvider.addEventChannel(ec);
+    @Produces(SseFeature.SERVER_SENT_EVENTS)
+    public EventOutput getEvents() {
+        EventOutput ec = new EventOutput();
+        DataProvider.addEventOutput(ec);
         return ec;
     }
 }

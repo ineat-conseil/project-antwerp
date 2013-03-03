@@ -1,5 +1,6 @@
 package fr.ineatconseil.antwerp.entity;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
@@ -12,12 +13,20 @@ import java.util.logging.Logger;
 public class Game {
     
     private Long id;
+    private String self;
     private Player player1;
     private Player player2;
-    private LinkedHashSet<Move> moves = new LinkedHashSet<>();
+    private LinkedHashSet<Move> moves = new LinkedHashSet<>(9);
     private GameStatus status = GameStatus.WAITING_FOR_PLAYERS;
-    private Long winnerId;
+    private String winnerId;
 
+    public String getSelf() {
+        return self;
+    }
+
+    public void setSelf(String self) {
+        this.self = self;
+    }
     public GameStatus getStatus() {
         return status;
     }
@@ -26,11 +35,11 @@ public class Game {
         this.status = status;
     }
     
-    public Long getWinnerId() {
+    public String getWinnerId() {
         return winnerId;
     }
     
-    public void setWinnerId(Long winnerId) {
+    public void setWinnerId(String winnerId) {
         this.winnerId = winnerId;
     }
     
@@ -59,48 +68,51 @@ public class Game {
         status = GameStatus.PLAYING;
     }
 
-    public LinkedHashSet<Move> getMoves() {
-        return moves;
+    public Move[] getMoves() {
+        return moves.toArray(new Move[moves.size()]);
+    }
+    public void setMoves(Move[] moves){
+        this.moves.addAll(Arrays.asList(moves));
     }
 
     public Move addMove(Move move) {
         // is the game over ?
-        if(GameStatus.OVER.equals(status)) {
+        if(GameStatus.OVER.equals(status) || moves.size() == 9) {
             throw new java.lang.UnsupportedOperationException("The game is over.");
         }
         
         //Does the move is played by one of the players ?
-        if(!move.getPlayerId().equals(player1.getId()) && !move.getPlayerId().equals(player2.getId())) {
-            throw new java.lang.UnsupportedOperationException("Sorry but ... who are you ?");
+        if(!move.getPlayerURI().equals(player1.getSelf()) && !move.getPlayerURI().equals(player2.getSelf())) {
+            throw new java.lang.UnsupportedOperationException("Sorry but ... who are you " + move.getPlayerURI() +" ?");
         }
-        
+
         //Does the move is played by the right player ?
-        Move lastMove = 
+        Move lastMove =
                 moves.size()==0
-                ? null
-                : moves.toArray(new Move[moves.size()])[moves.size()-1];
-        
-        if(lastMove != null && lastMove.getPlayerId().equals(move.getPlayerId())) {
+                        ? null
+                        : moves.toArray(new Move[moves.size()])[moves.size()-1];
+
+        if(lastMove != null && lastMove.getPlayerURI().equals(move.getPlayerURI())) {
             throw new java.lang.UnsupportedOperationException("It's not your turn, buddy!");
         }
-        
+
         //Does the move have already been played ?
         for(Move m : moves) {
             if(m.getX()==move.getX() && m.getY()==move.getY()) {
                 throw new java.lang.UnsupportedOperationException("Not again!");
             }
         }
-        
+
         //ok, play!
+        move.setId(moves.size()+1);
         moves.add(move);
-        
-        updateGameStatus(move.getPlayerId());
+
+        updateGameStatus(move.getPlayerURI());
         return move;
     }
     
-    private void updateGameStatus(long playerId) {
-        Logger.getLogger(this.getClass().getName()).info("##"+moves.size());
-        if(moves.size()==9) { 
+    private void updateGameStatus(String playerURI) {
+        if(moves.size() == 9) {
             status = GameStatus.OVER;
         } else {
             int[] xCount = new int[3];
@@ -109,7 +121,7 @@ public class Game {
             int diagBackSlashCount = 0;
             
             for(Move m : moves) {
-                if(m.getPlayerId() == playerId) {
+                if(m!=null && m.getPlayerURI().equals(playerURI)) {
                     xCount[m.getX()] = xCount[m.getX()]+1;
                     yCount[m.getY()] = yCount[m.getY()]+1;
                     if(m.getX()==m.getY()) {
@@ -129,7 +141,7 @@ public class Game {
                || diagBackSlashCount==3
                || diagSlashCount==3) {
                 status = GameStatus.OVER;
-                winnerId = playerId;
+                winnerId = playerURI;
             }
         }
     }
